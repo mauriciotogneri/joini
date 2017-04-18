@@ -2,14 +2,13 @@ package com.mauriciotogneri.joini.app.model;
 
 import com.mauriciotogneri.joini.app.app.Constants;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Map.Entry;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Item
 {
     private final String name;
-    private final Map<String, String> properties = new HashMap<>();
+    private final List<Property> properties = new ArrayList<>();
 
     public Item(String name)
     {
@@ -28,37 +27,37 @@ public class Item
 
     public void join(Group group, Item item)
     {
-        for (String key : item.properties.keySet())
+        for (Property property : item.properties)
         {
-            String localValue = property(key);
+            Property localProperty = property(property.key());
 
-            if (localValue != null)
+            if (localProperty != null)
             {
-                properties.put(key, localValue);
+                localProperty.join(property);
             }
             else
             {
-                System.err.println(String.format("Translation not found in INI: %s.%s.%s", group, item, key));
+                System.err.println(String.format("Translation not found in INI: %s.%s.%s", group, item, property));
             }
         }
     }
 
-    private String property(String key)
+    private Property property(String key)
     {
-        for (Entry<String, String> entry : properties.entrySet())
+        for (Property property : properties)
         {
-            if (entry.getKey().equals(key))
+            if (property.key(key))
             {
-                return entry.getValue();
+                return property;
             }
         }
 
         return null;
     }
 
-    public void add(String key, String value)
+    public void add(Property property)
     {
-        properties.put(key, value);
+        properties.add(property);
     }
 
     /*public String getTranslationContent(String locale)
@@ -109,9 +108,9 @@ public class Item
 
         builder.append(String.format("%s[%s]%n", Constants.TAB, name));
 
-        for (Entry<String, String> entry : properties.entrySet())
+        for (Property property : properties)
         {
-            builder.append(String.format("%s%s%s = %s%n", Constants.TAB, Constants.TAB, entry.getKey(), entry.getValue()));
+            builder.append(property.toString());
         }
 
         builder.append(String.format("%n"));
