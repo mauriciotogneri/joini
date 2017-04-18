@@ -1,5 +1,9 @@
 package com.mauriciotogneri.joini.app.model;
 
+import org.ini4j.Ini;
+import org.ini4j.Profile.Section;
+
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -40,6 +44,52 @@ public class Catalogue
         }
 
         return null;
+    }
+
+    public static Catalogue fromIni(File file) throws Exception
+    {
+        Catalogue catalogue = new Catalogue();
+
+        Ini ini = new Ini(file);
+
+        Group currentGroup = null;
+
+        for (String name : ini.keySet())
+        {
+            Section section = ini.get(name);
+
+            if (section.isEmpty())
+            {
+                if (currentGroup != null)
+                {
+                    catalogue.add(currentGroup);
+                }
+
+                currentGroup = new Group(name.replace("[", "").replace("]", ""));
+            }
+            else
+            {
+                Item item = new Item(name);
+
+                for (String key : section.keySet())
+                {
+                    Property property = new Property(key, section.get(key));
+                    item.add(property);
+                }
+
+                if (currentGroup != null)
+                {
+                    currentGroup.add(item);
+                }
+            }
+        }
+
+        if (currentGroup != null)
+        {
+            catalogue.add(currentGroup);
+        }
+
+        return catalogue;
     }
 
     @Override
