@@ -8,8 +8,8 @@ public class Joini
 {
     public static void main(String[] args) throws Exception
     {
-        File ini = new File("/home/mauricio/test.ini");
-        Catalogue catalogue = Catalogue.fromIni(ini);
+        File ini = new File("/home/mauricio/test.json");
+        Catalogue catalogue = Catalogue.fromJson(ini);
         System.out.println(catalogue);
     }
 }

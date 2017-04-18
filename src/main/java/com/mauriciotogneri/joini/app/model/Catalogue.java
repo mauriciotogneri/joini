@@ -1,11 +1,24 @@
 package com.mauriciotogneri.joini.app.model;
 
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
+
 import org.ini4j.Ini;
 import org.ini4j.Profile.Section;
 
+import java.io.BufferedReader;
+import java.io.ByteArrayInputStream;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.Reader;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map.Entry;
+import java.util.stream.Collectors;
 
 public class Catalogue
 {
@@ -48,9 +61,27 @@ public class Catalogue
 
     public static Catalogue fromIni(File file) throws Exception
     {
-        Catalogue catalogue = new Catalogue();
+        return fromIni(new Ini(file));
+    }
 
-        Ini ini = new Ini(file);
+    public static Catalogue fromIni(InputStream inputStream) throws Exception
+    {
+        return fromIni(new Ini(inputStream));
+    }
+
+    public static Catalogue fromIni(String string) throws Exception
+    {
+        return fromIni(new ByteArrayInputStream(string.getBytes(StandardCharsets.UTF_8)));
+    }
+
+    public static Catalogue fromIni(Reader reader) throws Exception
+    {
+        return fromIni(new Ini(reader));
+    }
+
+    private static Catalogue fromIni(Ini ini) throws Exception
+    {
+        Catalogue catalogue = new Catalogue();
 
         Group currentGroup = null;
 
@@ -87,6 +118,59 @@ public class Catalogue
         if (currentGroup != null)
         {
             catalogue.add(currentGroup);
+        }
+
+        return catalogue;
+    }
+
+    public static Catalogue fromJson(String json)
+    {
+        return fromJson(new JsonParser().parse(json).getAsJsonObject());
+    }
+
+    public static Catalogue fromJson(File file) throws Exception
+    {
+        return fromJson(new FileInputStream(file));
+    }
+
+    public static Catalogue fromJson(InputStream inputStream)
+    {
+        BufferedReader buffer = new BufferedReader(new InputStreamReader(inputStream));
+
+        return fromJson(buffer.lines().collect(Collectors.joining("\n")));
+    }
+
+    public static Catalogue fromJson(Reader reader)
+    {
+        return fromJson(new JsonParser().parse(reader).getAsJsonObject());
+    }
+
+    private static Catalogue fromJson(JsonObject json)
+    {
+        Catalogue catalogue = new Catalogue();
+
+        for (Entry<String, JsonElement> groupEntry : json.entrySet())
+        {
+            JsonObject jsonGroup = groupEntry.getValue().getAsJsonObject();
+
+            Group group = new Group(groupEntry.getKey());
+
+            for (Entry<String, JsonElement> itemEntry : jsonGroup.entrySet())
+            {
+                JsonObject jsonItem = itemEntry.getValue().getAsJsonObject();
+
+                Item item = new Item(itemEntry.getKey());
+
+                for (Entry<String, JsonElement> propertyEntry : jsonItem.entrySet())
+                {
+                    Property property = new Property(propertyEntry.getKey(), propertyEntry.getValue().getAsString());
+                    item.add(property);
+                }
+
+                group.add(item);
+            }
+
+            catalogue.add(group);
         }
 
         return catalogue;

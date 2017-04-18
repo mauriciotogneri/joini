@@ -70,7 +70,7 @@ public class Group
             builder.append(item.toString());
         }
 
-        builder.append(String.format("%n%n"));
+        builder.append(String.format("%n"));
 
         return builder.toString();
     }
