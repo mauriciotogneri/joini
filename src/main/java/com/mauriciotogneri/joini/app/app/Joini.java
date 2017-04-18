@@ -1,4 +1,4 @@
-package com.mauriciotogneri.joini.app;
+package com.mauriciotogneri.joini.app.app;
 
 public class Joini
 {
