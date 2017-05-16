@@ -1,6 +1,5 @@
 package com.mauriciotogneri.joini.app.model;
 
-import com.mauriciotogneri.joini.app.app.Constants;
 import com.mauriciotogneri.joini.app.app.Options;
 
 import java.util.ArrayList;
@@ -34,7 +33,7 @@ public class Item
 
             if (localProperty != null)
             {
-                localProperty.join(property);
+                add(property);
             }
             else if (options.createProperties)
             {
@@ -65,53 +64,12 @@ public class Item
         properties.add(property);
     }
 
-    /*public String getTranslationContent(String locale)
-    {
-        for (Translation translation : translations)
-        {
-            if (translation.locale().equals(locale))
-            {
-                return translation.content();
-            }
-        }
-
-        return "";
-    }
-
-    public boolean isTranslatedFor(String locale)
-    {
-        for (Translation translation : translations)
-        {
-            if (translation.locale().equals(locale))
-            {
-                return translation.translated();
-            }
-        }
-
-        return false;
-    }
-
-    public boolean isTranslatedForAll(List<String> locales)
-    {
-        int translationsFound = 0;
-
-        for (Translation translation : translations)
-        {
-            if (locales.contains(translation.locale()) && translation.translated())
-            {
-                translationsFound++;
-            }
-        }
-
-        return translationsFound == locales.size();
-    }*/
-
     @Override
     public String toString()
     {
         StringBuilder builder = new StringBuilder();
 
-        builder.append(String.format("%s[%s]%n", Constants.TAB, name));
+        builder.append(String.format("\t[%s]%n", name));
 
         for (Property property : properties)
         {
