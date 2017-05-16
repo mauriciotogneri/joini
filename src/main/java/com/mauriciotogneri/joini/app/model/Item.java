@@ -33,11 +33,12 @@ public class Item
 
             if (localProperty != null)
             {
+                properties.remove(localProperty);
                 add(property);
             }
             else if (options.createProperties)
             {
-                add(new Property(property.key(), property.value()));
+                add(property);
             }
             else
             {

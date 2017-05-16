@@ -12,10 +12,13 @@ import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map.Entry;
@@ -42,13 +45,25 @@ public class Catalogue
             }
             else if (options.createGroups)
             {
-                add(new Group(group.name()));
+                Group newGroup = new Group(group.name());
+                newGroup.join(group, options);
+                add(newGroup);
             }
             else
             {
                 throw new RuntimeException(String.format("Group not found in target: %s", group));
             }
         }
+    }
+
+    public void save(String path) throws IOException
+    {
+        Files.write(Paths.get(path), toString().getBytes("UTF-8"));
+    }
+
+    public void save(File file) throws IOException
+    {
+        save(file.getAbsolutePath());
     }
 
     private Group group(String name)

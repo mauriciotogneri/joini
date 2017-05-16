@@ -42,7 +42,9 @@ public class Group
             }
             else if (options.createItems)
             {
-                add(new Item(item.name()));
+                Item newItem = new Item(item.name());
+                newItem.join(this, item, options);
+                add(item);
             }
             else
             {
