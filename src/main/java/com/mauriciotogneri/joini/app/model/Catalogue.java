@@ -99,7 +99,7 @@ public class Catalogue
         return fromIni(new Ini(reader));
     }
 
-    private static Catalogue fromIni(Ini ini) throws Exception
+    private static Catalogue fromIni(Ini ini)
     {
         Catalogue catalogue = new Catalogue();
 

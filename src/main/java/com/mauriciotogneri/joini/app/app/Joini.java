@@ -36,7 +36,5 @@ public class Joini
         Catalogue targetCatalogue = Catalogue.fromIni(target);
         targetCatalogue.join(sourceCatalogue, options);
         targetCatalogue.save(target);
-
-        System.out.println(targetCatalogue);
     }
 }

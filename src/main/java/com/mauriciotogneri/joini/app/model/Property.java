@@ -16,11 +16,6 @@ public class Property
         return key;
     }
 
-    public String value()
-    {
-        return value;
-    }
-
     public Boolean key(String key)
     {
         return this.key.equals(key);
