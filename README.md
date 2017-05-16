@@ -1,5 +1,5 @@
 # Joini
-Java library to join INI files.
+Java library to merge INI files.
 
 ## Installation
 
