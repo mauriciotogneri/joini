@@ -1,6 +1,7 @@
 package com.mauriciotogneri.joini.app.model;
 
 import com.mauriciotogneri.joini.app.app.Constants;
+import com.mauriciotogneri.joini.app.app.Options;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,7 +26,7 @@ public class Item
         return this.name.equals(name);
     }
 
-    public void join(Group group, Item item)
+    public void join(Group group, Item item, Options options)
     {
         for (Property property : item.properties)
         {
@@ -35,9 +36,13 @@ public class Item
             {
                 localProperty.join(property);
             }
+            else if (options.createProperties)
+            {
+                add(new Property(property.key(), property.value()));
+            }
             else
             {
-                System.err.println(String.format("Translation not found in INI: %s.%s.%s", group, item, property));
+                throw new RuntimeException(String.format("Property not found in target: %s.%s.%s", group, item, property));
             }
         }
     }

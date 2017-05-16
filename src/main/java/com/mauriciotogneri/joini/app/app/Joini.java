@@ -32,7 +32,9 @@ public class Joini
 
     public void join(File source, File target, Options options) throws Exception
     {
-        Catalogue catalogue = Catalogue.fromIni(source);
-        System.out.println(catalogue);
+        Catalogue sourceCatalogue = Catalogue.fromIni(source);
+        Catalogue targetCatalogue = Catalogue.fromIni(target);
+        targetCatalogue.join(sourceCatalogue, options);
+        System.out.println(sourceCatalogue);
     }
 }

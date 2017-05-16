@@ -3,6 +3,7 @@ package com.mauriciotogneri.joini.app.model;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import com.mauriciotogneri.joini.app.app.Options;
 
 import org.ini4j.Ini;
 import org.ini4j.Profile.Section;
@@ -29,7 +30,7 @@ public class Catalogue
         groups.add(group);
     }
 
-    public void join(Catalogue catalogue)
+    public void join(Catalogue catalogue, Options options)
     {
         for (Group group : catalogue.groups)
         {
@@ -37,11 +38,15 @@ public class Catalogue
 
             if (localGroup != null)
             {
-                localGroup.join(group);
+                localGroup.join(group, options);
+            }
+            else if (options.createGroups)
+            {
+                add(new Group(group.name()));
             }
             else
             {
-                System.err.println(String.format("Group not found in INI: %s", group));
+                throw new RuntimeException(String.format("Group not found in target: %s", group));
             }
         }
     }

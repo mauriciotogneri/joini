@@ -1,5 +1,7 @@
 package com.mauriciotogneri.joini.app.model;
 
+import com.mauriciotogneri.joini.app.app.Options;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -28,7 +30,7 @@ public class Group
         items.add(item);
     }
 
-    public void join(Group group)
+    public void join(Group group, Options options)
     {
         for (Item item : group.items)
         {
@@ -36,11 +38,15 @@ public class Group
 
             if (localItem != null)
             {
-                localItem.join(this, item);
+                localItem.join(this, item, options);
+            }
+            else if (options.createItems)
+            {
+                add(new Item(item.name()));
             }
             else
             {
-                System.err.println(String.format("Item not found in INI: %s.%s", name, item));
+                throw new RuntimeException(String.format("Item not found in target: %s.%s", name, item));
             }
         }
     }
